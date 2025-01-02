@@ -10,5 +10,5 @@ export class AuthDto {
 
   @IsString()
   @MinLength(3)
-  username: string; // Додано username
+  username?: string; // Додано username
 }

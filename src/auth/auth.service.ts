@@ -19,7 +19,10 @@ export class AuthService {
   ) {}
 
   // Перевірка облікових даних
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<{ id: number; email: string; username: string }> {
     const user = await this.databaseService.user.findUnique({
       where: { email },
     });
@@ -38,27 +41,25 @@ export class AuthService {
   }
 
   // Логін
-  async login(user: any) {
+  async login(user: { id: number; email: string }) {
     const payload = { sub: user.id, email: user.email };
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
       expiresIn: `${this.configService.get<number>('JWT_EXPIRES_IN')}s`, // Час дії токена
     });
 
-    // Витягуємо інформацію про час закінчення токена
     const decodedToken = this.jwtService.verify(accessToken, {
       secret: this.configService.get<string>('JWT_SECRET'),
     });
 
-    const expiresAt = new Date(decodedToken.exp * 1000); // Конвертуємо exp у дату
-    console.log(expiresAt);
+    const expiresAt = new Date(decodedToken.exp * 1000);
 
     // Зберігаємо токен у базу даних
     await this.tokenService.createToken(user.id, accessToken, expiresAt);
-    console.log(accessToken);
+
     return {
       access_token: accessToken,
-      expires_at: expiresAt.toISOString(), // Для фронтенду, якщо потрібно
+      expires_at: expiresAt.toISOString(),
     };
   }
 
@@ -67,21 +68,21 @@ export class AuthService {
     const existingEmail = await this.databaseService.user.findUnique({
       where: { email },
     });
-  
+
     if (existingEmail) {
       throw new BadRequestException('User with this email already exists');
     }
-  
+
     const existingUsername = await this.databaseService.user.findUnique({
       where: { username },
     });
-  
+
     if (existingUsername) {
       throw new BadRequestException('User with this username already exists');
     }
-  
+
     const hashedPassword = await bcrypt.hash(password, 10);
-  
+
     const newUser = await this.databaseService.user.create({
       data: {
         email,
@@ -89,7 +90,7 @@ export class AuthService {
         username,
       },
     });
-  
+
     return { message: 'User successfully registered', user: newUser };
   }
 

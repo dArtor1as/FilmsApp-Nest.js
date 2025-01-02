@@ -37,14 +37,13 @@ describe('ReviewsService', () => {
     };
 
     const createReviewDto = {
-      userId: 1,
       movieId: 1,
       content: 'Great movie!',
     };
 
     jest.spyOn(databaseService.review, 'create').mockResolvedValue(mockReview);
 
-    const result = await service.createReview(createReviewDto);
+    const result = await service.createReview(1, createReviewDto); // Pass userId as the first argument
     expect(result).toEqual(mockReview);
   });
 });
