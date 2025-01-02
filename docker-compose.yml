@@ -9,11 +9,11 @@ services:
       POSTGRES_PASSWORD: MyPassword05
       POSTGRES_DB: TestNestjsDB
     ports:
-      - "5434:5432" # Порт для тестової бази
+      - '5434:5432' # Порт для тестової бази
     volumes:
       - pg_data_test:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5

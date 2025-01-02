@@ -1,112 +1,85 @@
-<html lang='en'>
+<html lang="en">
   <head>
-    <meta charset='UTF-8' />
+    <meta charset="UTF-8" />
     <title>Reviews</title>
     <link
-      href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
-      rel='stylesheet'
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
     />
   </head>
   <body>
-    <div class='container'>
-      <h1 class='my-4'>Latest Reviews</h1>
+    <div class="container">
+      <h1 class="my-4">Latest Reviews</h1>
       {{#if reviews.length}}
-        <ul class='list-group'>
-          {{#each reviews}}
-            <li class='list-group-item'>
-              <div class='media'>
-                <img
-                  src='https://image.tmdb.org/t/p/w500{{this.movie.posterPath}}'
-                  class='mr-3'
-                  alt='Poster'
-                  style='width: 100px;'
-                />
-                <div class='media-body'>
-                  <h5 class='mt-0'>{{this.movie.title}}</h5>
-                  <p>{{this.content}}</p>
-                  <p><strong>Reviewed by:</strong> {{this.user.username}}</p>
-                  <p><strong>Date:</strong> {{formatDate this.createdAt}}</p>
+      <ul class="list-group">
+        {{#each reviews}}
+        <li class="list-group-item">
+          <div class="media">
+            <img
+              src="https://image.tmdb.org/t/p/w500{{this.movie.posterPath}}"
+              class="mr-3"
+              alt="Poster"
+              style="width: 100px;"
+            />
+            <div class="media-body">
+              <h5 class="mt-0">{{this.movie.title}}</h5>
+              <p>{{this.content}}</p>
+              <p>
+                <strong>Reviewed by:</strong>
+                {{this.user.username}}
+              </p>
+              <p>
+                <strong>Date:</strong>
+                {{formatDate this.createdAt}}
+              </p>
 
-                  <!-- Comments Section -->
-                  <div class='mt-4'>
-                    <h6>Comments:</h6>
-                    {{#if this.comments.length}}
-                      <ul class='list-group'>
-                        {{#each this.comments}}
-                          <li class='list-group-item'>
-                            <p>{{this.content}}</p>
-                            <p><strong>By:</strong>
-                              {{this.user.username}}
-                              |
-                              <strong>Date:</strong>
-                              {{formatDate this.createdAt}}</p>
-                          </li>
-                        {{/each}}
-                      </ul>
-                    {{else}}
-                      <p>No comments yet.</p>
-                    {{/if}}
-                  </div>
-
-                  <!-- Add Comment Form -->
-                  <form id='comment-form-{{this.id}}' class='mt-3 comment-form'>
-                    <div class='form-group'>
-                      <label for='content-{{this.id}}'>Add a Comment:</label>
-                      <textarea
-                        class='form-control'
-                        id='content-{{this.id}}'
-                        name='content'
-                        required
-                      ></textarea>
-                    </div>
-                    <input type='hidden' name='reviewId' value='{{this.id}}' />
-                    <button
-                      type='submit'
-                      class='btn btn-success'
-                    >Submit</button>
-                  </form>
-                </div>
+              <!-- Comments Section -->
+              <div class="mt-4">
+                <h6>Comments:</h6>
+                {{#if this.comments.length}}
+                <ul class="list-group">
+                  {{#each this.comments}}
+                  <li class="list-group-item">
+                    <p>{{this.content}}</p>
+                    <p>
+                      <strong>By:</strong>
+                      {{this.user.username}} |
+                      <strong>Date:</strong>
+                      {{formatDate this.createdAt}}
+                    </p>
+                  </li>
+                  {{/each}}
+                </ul>
+                {{else}}
+                <p>No comments yet.</p>
+                {{/if}}
               </div>
-            </li>
-          {{/each}}
-        </ul>
+
+              <!-- Add Comment Form -->
+              <form id="comment-form-{{this.id}}" class="mt-3 comment-form">
+                <div class="form-group">
+                  <label for="content-{{this.id}}">Add a Comment:</label>
+                  <textarea
+                    class="form-control"
+                    id="content-{{this.id}}"
+                    name="content"
+                    required
+                  ></textarea>
+                </div>
+                <input type="hidden" name="reviewId" value="{{this.id}}" />
+                <button type="submit" class="btn btn-success">Submit</button>
+              </form>
+            </div>
+          </div>
+        </li>
+        {{/each}}
+      </ul>
       {{else}}
-        <p>No reviews found.</p>
+      <p>No reviews found.</p>
       {{/if}}
     </div>
-    <script>
-      // Add event listeners to all comment forms
-      document.querySelectorAll('.comment-form').forEach(form => {
-        form.addEventListener('submit', async (event) => {
-          event.preventDefault();
-          const token = localStorage.getItem('token');
-          const content = form.querySelector('textarea[name="content"]').value;
-          const reviewId = Number(form.querySelector('input[name="reviewId"]').value);
-          try {
-            const response = await fetch('/comments', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({ content, reviewId })
-            });
-            if (response.ok) {
-              alert('Comment successfully added!');
-              location.reload(); // Reload to show the new comment
-            } else {
-              const error = await response.json();
-              alert(error.message);
-            }
-          } catch (error) {
-            alert('An error occurred. Please try again.');
-          }
-        });
-      });
-    </script>
-    <script src='https://code.jquery.com/jquery-3.5.1.slim.min.js'></script>
-    <script
-      src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'
-    ></script>
+    <script src="/js/reviews.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>
