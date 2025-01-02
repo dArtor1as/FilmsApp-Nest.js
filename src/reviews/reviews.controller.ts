@@ -17,6 +17,11 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
+interface JwtPayload {
+  sub: number; // або відповідно до структури вашого токена
+  email: string;
+}
+
 @Controller('reviews')
 export class ReviewsController {
   constructor(
@@ -40,7 +45,7 @@ export class ReviewsController {
   @Post()
   async createReview(
     @Body() createReviewDto: CreateReviewDto,
-    @Req() req: any,
+    @Req() req: { user: JwtPayload },
   ) {
     const userId = req.user.sub;
     return this.reviewsService.createReview(userId, createReviewDto);
@@ -58,11 +63,11 @@ export class ReviewsController {
 
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = this.jwtService.verify(token, {
+      this.jwtService.verify<JwtPayload>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
       return this.reviewsService.update(id, updateReviewDto);
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }
@@ -78,11 +83,11 @@ export class ReviewsController {
 
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = this.jwtService.verify(token, {
+      this.jwtService.verify<JwtPayload>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
       return this.reviewsService.remove(id);
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }

@@ -17,20 +17,15 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Req() req: any, @Body() createCommentDto: CreateCommentDto) {
-    console.log('Incoming request:', createCommentDto);
+  create(
+    @Req() req: { user: { sub: number } },
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
     const { reviewId, content } = createCommentDto;
     const userId = req.user.sub;
     return this.commentsService.createComment(userId, reviewId, content);
   }
-  /* @Post()
-  async createReview(
-  @Body() createReviewDto: CreateReviewDto,
-    @Req() req: any
-  ) {
-  const userId = req.user.sub;
-  return this.reviewsService.createReview(userId, createReviewDto);
-} */
+
   @Get()
   findAll() {
     return this.commentsService.findAll();

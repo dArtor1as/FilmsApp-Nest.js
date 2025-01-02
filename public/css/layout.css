@@ -1,0 +1,52 @@
+/* Navigation Bar Styles */
+.navbar-custom {
+  background: linear-gradient(90deg, #007bff, #1a73e8);
+  color: #fff;
+}
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand {
+  color: #fff;
+  transition: color 0.3s;
+}
+.navbar-custom .nav-link:hover {
+  color: #ffdd57;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Hero Section Styles */
+.hero-section {
+  background: url('https://filmustage.com/static/02069cfe178e75140440e87167e0802c/96b71/Decoding-cinema---A-deep-dive-into-film-studies-and-its-language.webp')
+    no-repeat center center / cover;
+  color: white;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+.hero-section p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+/* Card Hover Effect */
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}

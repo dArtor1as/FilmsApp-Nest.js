@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: ${POSTGRES_CONTAINER_NAME:-test_postgres}
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: MyPassword05
+      POSTGRES_DB: TestNestjsDB
+    ports:
+      - '5434:5432' # Порт для тестової бази
+    volumes:
+      - pg_data_test:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data_test:

@@ -15,8 +15,12 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return the welcome message', () => {
+      const result = appController.getHello();
+      expect(result).toEqual({
+        message: 'Ласкаво просимо на сайт про фільми!',
+        title: 'Головна сторінка',
+      });
     });
   });
 });

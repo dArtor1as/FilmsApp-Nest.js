@@ -11,8 +11,11 @@ export class FilmsService {
     private readonly tmdbService: TmdbService,
   ) {}
 
-  async findAll(genre?: string, title?: string): Promise<any> {
-    const whereClause: any = {};
+  async findAll(
+    genre?: string,
+    title?: string,
+  ): Promise<{ id: number; title: string; genre: string[] }[]> {
+    const whereClause: Record<string, unknown> = {};
 
     if (genre) {
       whereClause.genre = { has: genre };
@@ -24,6 +27,7 @@ export class FilmsService {
 
     return this.databaseService.movie.findMany({ where: whereClause });
   }
+
   async findAllGenres(): Promise<string[]> {
     const films = await this.databaseService.movie.findMany();
     const genres = new Set<string>();
@@ -32,7 +36,16 @@ export class FilmsService {
   }
 
   // Отримання конкретного фільму за ID
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<{
+    id: number;
+    title: string;
+    posterPath: string;
+    genre: string[];
+    releaseYear: number;
+    averageRating: number;
+    userRating: number;
+    ratings: { value: number }[];
+  }> {
     const movie = await this.databaseService.movie.findUnique({
       where: { id },
       include: {
@@ -44,7 +57,6 @@ export class FilmsService {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
 
-    // Обчислення userRating з рейтингу користувачів
     const userRatings = movie.ratings.map((rating) => rating.value);
     const userRating =
       userRatings.length > 0
@@ -53,13 +65,21 @@ export class FilmsService {
         : 0;
 
     return {
-      ...movie,
+      id: movie.id,
+      title: movie.title,
+      posterPath: movie.posterPath,
+      genre: movie.genre,
+      releaseYear: movie.releaseYear,
+      averageRating: movie.averageRating,
       userRating,
+      ratings: movie.ratings,
     };
   }
 
   // Додавання нового фільму
-  async create(createFilmDto: CreateFilmDto): Promise<any> {
+  async create(
+    createFilmDto: CreateFilmDto,
+  ): Promise<{ id: number; title: string; genre: string[] }> {
     return this.databaseService.movie.create({
       data: {
         tmdbId: Number(createFilmDto.tmdbId),
@@ -69,12 +89,16 @@ export class FilmsService {
         releaseYear: createFilmDto.releaseYear,
         averageRating: createFilmDto.averageRating ?? 0,
       },
+      select: { id: true, title: true, genre: true },
     });
   }
 
   // Оновлення фільму
-  async update(id: number, updateFilmDto: UpdateFilmDto): Promise<any> {
-    const existingMovie = await this.findOne(id); // Перевіряємо, чи фільм існує
+  async update(
+    id: number,
+    updateFilmDto: UpdateFilmDto,
+  ): Promise<{ id: number; title: string; genre: string[] }> {
+    const existingMovie = await this.findOne(id);
     return this.databaseService.movie.update({
       where: { id },
       data: {
@@ -85,25 +109,31 @@ export class FilmsService {
         averageRating:
           updateFilmDto.averageRating ?? existingMovie.averageRating,
       },
+      select: { id: true, title: true, genre: true },
     });
   }
 
   // Видалення фільму
-  async delete(id: number): Promise<any> {
-    await this.findOne(id); // Перевірка, чи фільм існує
-    return this.databaseService.movie.delete({ where: { id } });
+  async delete(id: number): Promise<{ id: number; title: string }> {
+    await this.findOne(id);
+    return this.databaseService.movie.delete({
+      where: { id },
+      select: { id: true, title: true },
+    });
   }
 
   // Отримання даних про фільм з TMDB API
-  async findOneByTmdbId(tmdbId: number): Promise<any> {
+  async findOneByTmdbId(
+    tmdbId: number,
+  ): Promise<{ id: number; title: string; genre: string[] }> {
     const existingMovie = await this.databaseService.movie.findUnique({
       where: { tmdbId },
+      select: { id: true, title: true, genre: true },
     });
     if (existingMovie) {
-      return existingMovie; // Якщо фільм вже є в базі, повертаємо його
+      return existingMovie;
     }
 
-    // Якщо фільм не знайдений у БД, отримуємо дані з TMDB API
     const movieData = await this.tmdbService.fetchMovieFromTMDB(tmdbId);
     return this.databaseService.movie.create({
       data: {
@@ -114,6 +144,7 @@ export class FilmsService {
         releaseYear: movieData.releaseYear,
         averageRating: movieData.averageRating,
       },
+      select: { id: true, title: true, genre: true },
     });
   }
 }
