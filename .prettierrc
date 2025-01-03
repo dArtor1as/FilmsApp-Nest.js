@@ -5,6 +5,7 @@
   "tabWidth": 2,
   "htmlWhitespaceSensitivity": "css",
   "embeddedLanguageFormatting": "off",
+  "endOfLine": "lf",
   "overrides": [
     {
       "files": "*.js",
