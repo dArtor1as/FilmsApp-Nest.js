@@ -2,14 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { FilmsService } from '../src/films/films.service';
 import { DatabaseService } from '../src/database/database.service';
 import { TmdbService } from '../src/tmdb/tmdb.service';
 
 describe('FilmsController (e2e)', () => {
   let app: INestApplication;
-  let filmsService: FilmsService;
-  let databaseService: DatabaseService;
 
   const mockDatabaseService = {
     movie: {
@@ -58,8 +55,6 @@ describe('FilmsController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    filmsService = moduleFixture.get<FilmsService>(FilmsService);
-    databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
 
   afterAll(async () => {
