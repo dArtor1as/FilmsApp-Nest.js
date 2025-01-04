@@ -1,8 +1,13 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": ["js", "json", "ts", "hbs"],
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1",
+    "\\.hbs$": "jest-transform-stub"
+  },
+  "coverageDirectory": "./coverage",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   }
