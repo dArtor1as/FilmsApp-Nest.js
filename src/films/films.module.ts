@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { FilmsController } from './films.controller';
 import { FilmsService } from './films.service';
 import { TmdbService } from '../tmdb/tmdb.service';
-import { DatabaseModule } from 'src/database/database.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
   controllers: [FilmsController],
