@@ -31,13 +31,13 @@ async function bootstrap() {
   });
 
   // Set the views directory
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setBaseViewsDir(join(process.cwd(), 'views'));
 
   // Set Handlebars as the view engine
   app.setViewEngine('hbs');
 
   // Set the static assets directory
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.useStaticAssets(join(process.cwd(), 'public'));
 
   // Увімкнення глобальної валідації
   app.useGlobalPipes(

@@ -1,20 +1,40 @@
+version: '3.8'
+
 services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      # хост бази даних postgres
+      - DATABASE_URL=postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public
+      # Передаємо ключі з .env файлу
+      - TMDB_API_KEY=${TMDB_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Спочатку накатуємо структуру БД, потім запускаємо сервер
+    command: sh -c "npx prisma db push && node dist/src/main"
+
+  # База даних
   postgres:
-    image: postgres:17
-    container_name: ${POSTGRES_CONTAINER_NAME:-test_postgres}
+    image: postgres:15-alpine
+    container_name: films_db_container
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: MyPassword05
-      POSTGRES_DB: TestNestjsDB
+      POSTGRES_DB: filmsdb
     ports:
-      - '5434:5432' # Порт для тестової бази
+      - '5434:5432' # Зовнішній порт 5434 (щоб не конфліктував з локальним)
     volumes:
-      - pg_data_test:/var/lib/postgresql/data
+      - pg_data_prod:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  pg_data_test:
+  pg_data_prod:
