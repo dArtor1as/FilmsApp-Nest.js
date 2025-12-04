@@ -1,85 +1,157 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+<a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
+<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+<p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
 <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
 <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+FilmsApp (NestJS)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Веб-застосунок для пошуку, перегляду інформації та оцінки фільмів. Проєкт реалізовано з використанням архітектури на базі NestJS, реляційної бази даних PostgreSQL та ORM Prisma.
 
-## Project setup
+Як шаблонний рушій для відображення інтерфейсу використовується Handlebars (HBS).
 
-```bash
-$ npm install
-```
+Функціонал
 
-## Compile and run the project
+Каталог фільмів: Перегляд списку, детальна інформація, пошук та фільтрація за жанрами.
 
-```bash
-# development
-$ npm run start
+Інтеграція з TMDB API: Автоматичне отримання та збереження метаданих про фільми.
 
-# watch mode
-$ npm run start:dev
+Автентифікація: Реєстрація та вхід користувачів з використанням JWT (JSON Web Tokens).
 
-# production mode
-$ npm run start:prod
-```
+Взаємодія:
 
-## Run tests
+Створення та редагування рецензій.
 
-```bash
-# unit tests
-$ npm run test
+Коментування рецензій.
 
-# e2e tests
-$ npm run test:e2e
+Система оцінювання фільмів.
 
-# test coverage
-$ npm run test:cov
-```
+Список "Обране" для користувачів.
 
-## Resources
+Технологічний стек
 
-Check out a few resources that may come in handy when working with NestJS:
+Framework: NestJS
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Мова програмування: TypeScript
 
-## Support
+База даних: PostgreSQL
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+ORM: Prisma
 
-## Stay in touch
+Template Engine: Handlebars (hbs)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Контейнеризація: Docker, Docker Compose
 
-## License
+Тестування: Jest, Supertest
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Встановлення та запуск (Docker)
+
+Для запуску проєкту рекомендується використовувати Docker, що дозволяє розгорнути застосунок та базу даних без локального налаштування середовища.
+
+1. Налаштування змінних оточення
+
+Створіть файл .env у кореневій директорії проєкту. Нижче наведено приклад конфігурації для роботи всередині Docker-мережі:
+
+# API Key від TheMovieDB (TMDB)
+
+TMDB_API_KEY=4b6edd71a6834daf5c966f231e3b0efb
+
+# Налаштування JWT
+
+JWT_SECRET=your_super_secret_key1234sdaffasd_5sda2dzc
+JWT_EXPIRES_IN=3600
+
+# Налаштування підключення до бази даних (для Docker контейнера)
+
+# Хост 'postgres' відповідає назві сервісу в docker-compose.yml
+
+DATABASE_URL="postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public"
+
+2. Запуск контейнерів
+
+Виконайте команду для збірки та запуску контейнерів:
+
+docker-compose up --build
+
+Ця команда виконає наступні дії:
+
+Створить Docker-образи.
+
+Запустить контейнер з базою даних PostgreSQL.
+
+Запустить контейнер із застосунком NestJS.
+
+Автоматично застосує міграції до бази даних.
+
+Сервер буде доступний за адресою: http://localhost:3000
+
+3. Наповнення бази даних (Seeding)
+
+Для коректної роботи застосунку та наявності тестових даних (користувачі, фільми, рецензії) необхідно виконати скрипт наповнення.
+
+Відкрийте новий термінал та виконайте команду (при запущених контейнерах):
+
+docker exec -it project-name-app-1 npx prisma db seed
+
+Примітка: перевірте ім'я контейнера командою docker ps, якщо воно відрізняється від project-name-app-1.
+
+Дані для входу після наповнення:
+
+Email: admin@example.com
+
+Пароль: 123456
+
+Локальний запуск (без Docker)
+
+Якщо ви бажаєте запустити проєкт без контейнеризації, використовуючи локально встановлені Node.js та PostgreSQL.
+
+Встановіть залежності:
+
+npm install
+
+Налаштуйте файл .env для вашої локальної бази даних :
+
+# TMDB API Key (Get yours at https://www.themoviedb.org/)
+
+    TMDB_API_KEY=your_tmdb_api_key_here
+
+    # JWT Secret for signing tokens
+    JWT_SECRET=secret_key_change_me
+    JWT_EXPIRES_IN=24h
+
+    # Database URL examples:
+    # For Docker:
+    DATABASE_URL="postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public"
+    # For Local run:
+    # DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"
+
+Запустіть застосунок:
+
+npm run start
+
+Тестування
+
+Проєкт містить Unit та E2E тести.
+
+# запуск unit тестів
+
+npm run test
+
+# запуск e2e тестів
+
+npm run test:e2e
+
+# перевірка покриття коду тестами
+
+npm run test:cov
+
+Ліцензія
+
+Nest is MIT licensed.
