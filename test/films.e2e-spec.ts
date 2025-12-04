@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DatabaseService } from '../src/database/database.service';
 import { TmdbService } from '../src/tmdb/tmdb.service';
+import { join } from 'path';
 
 describe('FilmsController (e2e)', () => {
-  let app: INestApplication;
+  let app: NestExpressApplication;
 
   const mockDatabaseService = {
     movie: {
@@ -53,7 +54,11 @@ describe('FilmsController (e2e)', () => {
       .useValue(mockTmdbService)
       .compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication<NestExpressApplication>();
+
+    app.setBaseViewsDir(join(__dirname, '..', 'views'));
+    app.setViewEngine('hbs');
+
     await app.init();
   });
 
@@ -65,15 +70,8 @@ describe('FilmsController (e2e)', () => {
     const response = await request(app.getHttpServer()).get('/films');
     expect(response.status).toBe(200);
     expect(response.text).toContain('<h1 class="my-4">Films</h1>');
-    expect(response.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: expect.any(Number),
-          title: expect.any(String),
-          genre: expect.arrayContaining([expect.any(String)]),
-        }),
-      ]),
-    );
+    expect(response.text).toContain('Test Film');
+    expect(response.text).toContain('Another Test Film');
   });
 
   it('/films (POST) should create a new film', async () => {
