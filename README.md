@@ -1,157 +1,169 @@
 <p align="center">
-<a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank">
+    <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
+  </a>
 </p>
 
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+  A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.
 </p>
 
-FilmsApp (NestJS)
+<p align="center">
+  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+  <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+  <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+</p>
+
+# FilmsApp (NestJS)
 
 Веб-застосунок для пошуку, перегляду інформації та оцінки фільмів. Проєкт реалізовано з використанням архітектури на базі NestJS, реляційної бази даних PostgreSQL та ORM Prisma.
 
 Як шаблонний рушій для відображення інтерфейсу використовується Handlebars (HBS).
 
-Функціонал
+---
 
-Каталог фільмів: Перегляд списку, детальна інформація, пошук та фільтрація за жанрами.
+## Функціонал
 
-Інтеграція з TMDB API: Автоматичне отримання та збереження метаданих про фільми.
+- **Каталог фільмів:** Перегляд списку, детальна інформація, пошук та фільтрація за жанрами.
+- **Інтеграція з TMDB API:** Автоматичне отримання та збереження метаданих про фільми.
+- **Автентифікація:** Реєстрація та вхід користувачів з використанням JWT (JSON Web Tokens).
+- **Взаємодія:**
+  - Створення та редагування рецензій.
+  - Коментування рецензій.
+  - Система оцінювання фільмів.
+  - Список «Обране» для користувачів.
 
-Автентифікація: Реєстрація та вхід користувачів з використанням JWT (JSON Web Tokens).
+---
 
-Взаємодія:
+## Технологічний стек
 
-Створення та редагування рецензій.
+- **Framework:** NestJS
+- **Мова програмування:** TypeScript
+- **База даних:** PostgreSQL
+- **ORM:** Prisma
+- **Template Engine:** Handlebars (hbs)
+- **Контейнеризація:** Docker, Docker Compose
+- **Тестування:** Jest, Supertest
 
-Коментування рецензій.
+---
 
-Система оцінювання фільмів.
+# Налаштування
 
-Список "Обране" для користувачів.
+## Встановлення та запуск (Docker)
 
-Технологічний стек
+### 1. Налаштування змінних оточення
 
-Framework: NestJS
+Створіть файл `.env` у кореневій директорії проєкту:
 
-Мова програмування: TypeScript
-
-База даних: PostgreSQL
-
-ORM: Prisma
-
-Template Engine: Handlebars (hbs)
-
-Контейнеризація: Docker, Docker Compose
-
-Тестування: Jest, Supertest
-
-Встановлення та запуск (Docker)
-
-Для запуску проєкту рекомендується використовувати Docker, що дозволяє розгорнути застосунок та базу даних без локального налаштування середовища.
-
-1. Налаштування змінних оточення
-
-Створіть файл .env у кореневій директорії проєкту. Нижче наведено приклад конфігурації для роботи всередині Docker-мережі:
-
+```env
 # API Key від TheMovieDB (TMDB)
-
 TMDB_API_KEY=4b6edd71a6834daf5c966f231e3b0efb
 
 # Налаштування JWT
-
 JWT_SECRET=your_super_secret_key1234sdaffasd_5sda2dzc
 JWT_EXPIRES_IN=3600
 
-# Налаштування підключення до бази даних (для Docker контейнера)
-
-# Хост 'postgres' відповідає назві сервісу в docker-compose.yml
-
+# Налаштування підключення до бази даних у Docker
 DATABASE_URL="postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public"
+```
 
-2. Запуск контейнерів
+### 2. Запуск контейнерів
 
 Виконайте команду для збірки та запуску контейнерів:
 
+```
 docker-compose up --build
+```
 
 Ця команда виконає наступні дії:
 
-Створить Docker-образи.
+- Створить Docker-образи.
 
-Запустить контейнер з базою даних PostgreSQL.
+- Запустить контейнер з базою даних PostgreSQL.
 
-Запустить контейнер із застосунком NestJS.
+- Запустить контейнер із застосунком NestJS.
 
-Автоматично застосує міграції до бази даних.
+- Автоматично застосує міграції до бази даних.
 
-Сервер буде доступний за адресою: http://localhost:3000
+- Сервер буде доступний за адресою: http://localhost:3000
 
-3. Наповнення бази даних (Seeding)
+### 3. Наповнення бази даних (Seeding)
 
 Для коректної роботи застосунку та наявності тестових даних (користувачі, фільми, рецензії) необхідно виконати скрипт наповнення.
 
 Відкрийте новий термінал та виконайте команду (при запущених контейнерах):
 
+```
 docker exec -it project-name-app-1 npx prisma db seed
+```
 
-Примітка: перевірте ім'я контейнера командою docker ps, якщо воно відрізняється від project-name-app-1.
+Примітка: перевірте ім'я контейнера командою `docker ps`, якщо воно відрізняється від project-name-app-1.
 
 Дані для входу після наповнення:
 
-Email: admin@example.com
+#### Email:
 
-Пароль: 123456
+```
+admin@example.com
+```
 
-Локальний запуск (без Docker)
+#### Пароль:
+
+```
+123456
+```
+
+## Локальний запуск (без Docker)
 
 Якщо ви бажаєте запустити проєкт без контейнеризації, використовуючи локально встановлені Node.js та PostgreSQL.
 
 Встановіть залежності:
 
+```
 npm install
+```
 
-Налаштуйте файл .env для вашої локальної бази даних :
+Налаштуйте файл `.env` для вашої локальної бази даних :
 
-# TMDB API Key (Get yours at https://www.themoviedb.org/)
+```
+TMDB_API_KEY=4b6edd71a6834daf5c966f231e3b0efb
+JWT_SECRET=your_super_secret_key1234sdaffasd_5sda2dzc
+JWT_EXPIRES_IN=3600
 
-    TMDB_API_KEY=your_tmdb_api_key_here
+Локальне підключення (localhost, порт 5433)
+DATABASE_URL="postgresql://postgres:MyPassword05@localhost:5433/NestjsDB?sslmode=prefer&connect_timeout=10"
+```
 
-    # JWT Secret for signing tokens
-    JWT_SECRET=secret_key_change_me
-    JWT_EXPIRES_IN=24h
+#### Запустіть застосунок:
 
-    # Database URL examples:
-    # For Docker:
-    DATABASE_URL="postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public"
-    # For Local run:
-    # DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"
-
-Запустіть застосунок:
-
+```
 npm run start
+```
 
-Тестування
+## Тестування
 
 Проєкт містить Unit та E2E тести.
 
-# запуск unit тестів
+#### запуск unit тестів
 
+```
 npm run test
+```
 
-# запуск e2e тестів
+#### запуск e2e тестів
 
+```
 npm run test:e2e
+```
 
-# перевірка покриття коду тестами
+#### перевірка покриття коду тестами
 
+```
 npm run test:cov
+```
 
-Ліцензія
+### Ліцензія
 
 Nest is MIT licensed.
