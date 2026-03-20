@@ -46,8 +46,6 @@ async function bootstrap() {
   app.use('/login', (req, res) => res.render('login'));
   app.use('/register', (req, res) => res.render('register'));
 
-  console.log('TMDB_API_KEY:', process.env.TMDB_API_KEY);
-
   await app.listen(3000);
 }
 bootstrap();

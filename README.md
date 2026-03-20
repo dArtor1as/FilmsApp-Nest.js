@@ -96,10 +96,10 @@ docker-compose up --build
 Відкрийте новий термінал та виконайте команду (при запущених контейнерах):
 
 ```
-docker exec -it project-name-app-1 npx prisma db seed
+docker exec -it my-cinema-app-app-1 npx prisma db seed
 ```
 
-Примітка: перевірте ім'я контейнера командою `docker ps`, якщо воно відрізняється від project-name-app-1.
+Примітка: перевірте ім'я контейнера командою `docker ps`, якщо воно відрізняється від my-cinema-app-app-1.
 
 Дані для входу після наповнення:
 

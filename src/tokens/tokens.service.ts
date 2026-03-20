@@ -53,7 +53,7 @@ export class TokensService {
     });
   }
 
-  // Видалення прострочених токенів (опціонально)
+  // Видалення прострочених токенів
   async cleanUpExpiredTokens() {
     return this.databaseService.token.deleteMany({
       where: {

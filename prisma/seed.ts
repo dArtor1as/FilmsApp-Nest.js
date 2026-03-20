@@ -1,32 +1,69 @@
 import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+import * as dotenv from 'dotenv';
 
-const prisma = new PrismaClient();
+// 1. Явно завантажуємо змінні з .env
+dotenv.config();
+
+// 2. Збираємо URL з гранулярних змінних
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASSWORD;
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+
+const connectionString =
+  process.env.DATABASE_URL ||
+  `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}?schema=public`;
+
+// 3. Налаштування адаптера для сідінгу
+const pool = new Pool({ connectionString });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const adapter = new PrismaPg(pool as any);
+
+// Ініціалізація
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log(' Start seeding...');
 
-  // 1. Створюємо тестового Юзера (щоб було кому писати рецензії)
-  // Пароль: "123456" (це готовий хеш, щоб не мучитися з бібліотеками)
+  // Хеш пароля "123456"
   const passwordHash = '$2b$10$EpWwR8t7c8.5.5.5.5.5.5.5.5.5.5.5';
 
-  const user = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {}, // Якщо юзер є - нічого не міняємо
-    create: {
+  // --- 1. СТВОРЕННЯ КОРИСТУВАЧІВ ---
+  const usersData = [
+    {
       email: 'admin@example.com',
       username: 'MovieMaster',
       password: passwordHash,
     },
-  });
+    {
+      email: 'critic@example.com',
+      username: 'KinoCritic',
+      password: passwordHash,
+    },
+    { email: 'john@example.com', username: 'JohnDoe', password: passwordHash },
+  ];
 
-  console.log(` Created user: ${user.username} (ID: ${user.id})`);
+  const createdUsers = [];
+  for (const u of usersData) {
+    const user = await prisma.user.upsert({
+      where: { email: u.email },
+      update: {},
+      create: u,
+    });
+    createdUsers.push(user);
+  }
+  console.log(` Created ${createdUsers.length} users.`);
 
-  // 2. Створюємо Фільми
+  // --- 2. СТВОРЕННЯ ФІЛЬМІВ (З ПОВНИМИ URL ДЛЯ ПОСТЕРІВ TMDB) ---
+  const tmdbBaseUrl = 'https://image.tmdb.org/t/p/w500';
   const moviesData = [
     {
       tmdbId: 157336,
       title: 'Interstellar',
-      posterPath: '/gEU2QniL6E77AAyXcCXr47FaOiy.jpg',
+      posterPath: `${tmdbBaseUrl}/gEU2QniL6E77AAyXcCXr47FaOiy.jpg`,
       genre: ['Adventure', 'Drama', 'Science Fiction'],
       releaseYear: 2014,
       averageRating: 8.6,
@@ -34,7 +71,7 @@ async function main() {
     {
       tmdbId: 27205,
       title: 'Inception',
-      posterPath: '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+      posterPath: `${tmdbBaseUrl}/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg`,
       genre: ['Action', 'Science Fiction', 'Adventure'],
       releaseYear: 2010,
       averageRating: 8.8,
@@ -42,7 +79,7 @@ async function main() {
     {
       tmdbId: 550,
       title: 'Fight Club',
-      posterPath: '/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg',
+      posterPath: `${tmdbBaseUrl}/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg`,
       genre: ['Drama'],
       releaseYear: 1999,
       averageRating: 8.4,
@@ -50,78 +87,160 @@ async function main() {
     {
       tmdbId: 155,
       title: 'The Dark Knight',
-      posterPath: '/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
+      posterPath: `${tmdbBaseUrl}/qJ2tW6WMUDux911r6m7haRef0WH.jpg`,
       genre: ['Drama', 'Action', 'Crime', 'Thriller'],
       releaseYear: 2008,
       averageRating: 8.5,
     },
+    {
+      tmdbId: 603,
+      title: 'The Matrix',
+      posterPath: `${tmdbBaseUrl}/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg`,
+      genre: ['Action', 'Science Fiction'],
+      releaseYear: 1999,
+      averageRating: 8.7,
+    },
+    {
+      tmdbId: 438631,
+      title: 'Dune',
+      posterPath: `${tmdbBaseUrl}/d5NXSklXo0qyIYkgV94XAgMIckC.jpg`,
+      genre: ['Science Fiction', 'Adventure'],
+      releaseYear: 2021,
+      averageRating: 7.9,
+    },
+    {
+      tmdbId: 680,
+      title: 'Pulp Fiction',
+      posterPath: `${tmdbBaseUrl}/d5iIlFn5s0ImszYzBPbOYKQcbJ5.jpg`,
+      genre: ['Thriller', 'Crime'],
+      releaseYear: 1994,
+      averageRating: 8.9,
+    },
+    {
+      tmdbId: 120,
+      title: 'The Lord of the Rings',
+      posterPath: `${tmdbBaseUrl}/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg`,
+      genre: ['Adventure', 'Fantasy', 'Action'],
+      releaseYear: 2001,
+      averageRating: 8.9,
+    },
+    {
+      tmdbId: 13,
+      title: 'Forrest Gump',
+      posterPath: `${tmdbBaseUrl}/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg`,
+      genre: ['Comedy', 'Drama', 'Romance'],
+      releaseYear: 1994,
+      averageRating: 8.5,
+    },
+    {
+      tmdbId: 238,
+      title: 'The Godfather',
+      posterPath: `${tmdbBaseUrl}/3bhkrj58Vtu7enYsRolD1fZdja1.jpg`,
+      genre: ['Drama', 'Crime'],
+      releaseYear: 1972,
+      averageRating: 9.0,
+    },
   ];
 
-  // Масив, куди ми збережемо створені фільми, щоб взяти їх ID
   const createdMovies = [];
-
-  for (const movieData of moviesData) {
+  for (const m of moviesData) {
     const movie = await prisma.movie.upsert({
-      where: { tmdbId: movieData.tmdbId },
+      where: { tmdbId: m.tmdbId },
       update: {},
-      create: movieData,
+      create: m,
     });
     createdMovies.push(movie);
-    console.log(`Created movie: ${movie.title} (ID: ${movie.id})`);
   }
+  console.log(` Created ${createdMovies.length} movies.`);
 
-  // 3. Створюємо Рецензії (Reviews)
-  // Прив'язуємо рецензії до нашого користувача і створених фільмів
+  // --- 3. СТВОРЕННЯ ВІДГУКІВ ТА КОМЕНТАРІВ (Без дублікатів) ---
+  const admin = createdUsers[0];
+  const critic = createdUsers[1];
+  const john = createdUsers[2];
 
-  const reviewsData = [
-    {
-      movieTitle: 'Interstellar',
-      content: 'Це просто шедевр! Музика Ганса Циммера неймовірна.',
+  const interstellar = createdMovies.find((m) => m.title === 'Interstellar')!;
+  const matrix = createdMovies.find((m) => m.title === 'The Matrix')!;
+  const dune = createdMovies.find((m) => m.title === 'Dune')!;
+
+  // Рецензія на Інтерстеллар (upsert гарантує відсутність дублів)
+  const review1 = await prisma.review.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      content:
+        'Це просто шедевр! Музика Ганса Циммера неймовірна, а візуальні ефекти випереджають час.',
+      userId: admin.id,
+      movieId: interstellar.id,
     },
-    {
-      movieTitle: 'Inception',
-      content: 'Сюжет дуже заплутаний, але кінцівка того варта.',
-    },
-    {
-      movieTitle: 'The Dark Knight',
-      content: 'Найкращий фільм про супергероїв. Джокер неперевершений.',
-    },
-  ];
+  });
 
-  for (const reviewData of reviewsData) {
-    // Знаходимо фільм у нашому масиві за назвою
-    const targetMovie = createdMovies.find(
-      (m) => m.title === reviewData.movieTitle,
-    );
-
-    if (targetMovie) {
-      // Перевіряємо, чи вже є рецензія від цього юзера на цей фільм (щоб не дублювати)
-      const existingReview = await prisma.review.findFirst({
-        where: {
-          userId: user.id,
-          movieId: targetMovie.id,
+  // Перевіряємо, чи є вже коментарі до цієї рецензії, щоб не спамити
+  const commentsCount = await prisma.comment.count({
+    where: { reviewId: review1.id },
+  });
+  if (commentsCount === 0) {
+    await prisma.comment.createMany({
+      data: [
+        {
+          content: 'Абсолютно згоден, кінцівка змусила плакати.',
+          userId: john.id,
+          reviewId: review1.id,
         },
-      });
-
-      if (!existingReview) {
-        await prisma.review.create({
-          data: {
-            content: reviewData.content,
-            userId: user.id,
-            movieId: targetMovie.id,
-          },
-        });
-        console.log(`Created review for: ${targetMovie.title}`);
-      }
-    }
+        {
+          content: 'Трохи затягнуто, але загалом круто.',
+          userId: critic.id,
+          reviewId: review1.id,
+        },
+      ],
+    });
   }
 
-  console.log(' Seeding finished.');
+  // Перевіряємо, чи існує вже рецензія на Матрицю від критика
+  const existingMatrixReview = await prisma.review.findFirst({
+    where: { userId: critic.id, movieId: matrix.id },
+  });
+  if (!existingMatrixReview) {
+    await prisma.review.create({
+      data: {
+        content:
+          'Брати Вачовські змінили кінематограф назавжди. Найкращий кіберпанк.',
+        userId: critic.id,
+        movieId: matrix.id,
+      },
+    });
+  }
+
+  // --- 4. ДОДАВАННЯ РЕЙТИНГІВ (Без дублікатів) ---
+  const ratingsCount = await prisma.rating.count();
+  if (ratingsCount === 0) {
+    await prisma.rating.createMany({
+      data: [
+        { value: 10, userId: admin.id, movieId: interstellar.id },
+        { value: 9, userId: critic.id, movieId: interstellar.id },
+        { value: 10, userId: critic.id, movieId: matrix.id },
+        { value: 8, userId: john.id, movieId: dune.id },
+      ],
+    });
+  }
+
+  // --- 5. ДОДАВАННЯ В УЛЮБЛЕНІ (Без дублікатів) ---
+  const favoritesCount = await prisma.favorite.count();
+  if (favoritesCount === 0) {
+    await prisma.favorite.createMany({
+      data: [
+        { userId: admin.id, movieId: interstellar.id },
+        { userId: admin.id, movieId: matrix.id },
+        { userId: john.id, movieId: dune.id },
+      ],
+    });
+  }
+
+  console.log(' Seeding finished successfully. No duplicates created!');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error(' Seeding failed:', e);
     process.exit(1);
   })
   .finally(async () => {
