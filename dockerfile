@@ -1,5 +1,5 @@
 # --- Етап 1: Збірка (Builder) ---
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -22,7 +22,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # --- Етап 2: Продакшен (Production) ---
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 WORKDIR /usr/src/app
 
