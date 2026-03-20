@@ -1,31 +1,47 @@
-# базовий образ Node.js
-FROM node:20-alpine
+# --- Етап 1: Збірка (Builder) ---
+FROM node:20-alpine AS builder
 
-# Встановлюємо OpenSSL для роботи Prisma
-RUN apk add --no-cache openssl python3 make g++
-# Робоча папка всередині контейнера
 WORKDIR /usr/src/app
 
-# 1. Копіюємо файли конфігурації npm
-COPY package*.json ./
+# Встановлюємо openssl (потрібен лише для генерації клієнта Prisma)
+RUN apk add --no-cache openssl
 
-# 2. Копіюємо папку prisma (там твоя схема БД)
+COPY package*.json ./
+COPY prisma.config.ts ./
 COPY prisma ./prisma/
 
-# 3. Встановлюємо залежності
-RUN npm install
+RUN npm install --loglevel=error
 
-# 4. Генеруємо клієнт Prisma (критично важливо!)
-RUN npx prisma generate
-
-# 5. Копіюємо весь інший код
 COPY . .
 
-# 6. Білдимо NestJS проєкт
+RUN npx prisma generate
+RUN npx tsc prisma/seed.ts --skipLibCheck --target es2022 --module commonjs
 RUN npm run build
 
-# Відкриваємо порт
+# Видаляємо dev-залежності, щоб полегшити фінальний образ
+RUN npm prune --omit=dev
+
+# --- Етап 2: Продакшен (Production) ---
+FROM node:20-alpine AS production
+
+WORKDIR /usr/src/app
+
+# Prisma вимагає openssl для роботи з БД у рантаймі
+RUN apk add --no-cache openssl
+
+# Забираємо лише готовий код та продакшен-модулі
+COPY --from=builder /usr/src/app/package.json ./
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+#  Копіюємо папку з HTML-шаблонами та статику
+COPY --from=builder /usr/src/app/views ./views
+COPY --from=builder /usr/src/app/public ./public
+
+#  Копіюємо конфіг прізми
+COPY --from=builder /usr/src/app/prisma.config.ts ./
+
 EXPOSE 3000
 
-# Команда запуску 
-CMD ["node", "dist/src/main"]
+CMD ["node", "dist/src/main.js"]
