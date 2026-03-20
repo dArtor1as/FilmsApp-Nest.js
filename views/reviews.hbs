@@ -32,12 +32,20 @@
               <p>{{this.content}}</p>
               <p>
                 <strong>Reviewed by:</strong>
-                {{this.user.username}}
+                <span class="review-author" data-author="{{this.user.username}}"
+                  >{{this.user.username}}</span
+                >
               </p>
               <p>
                 <strong>Date:</strong>
                 {{formatDate this.createdAt}}
               </p>
+              <button
+                class="btn btn-sm btn-danger delete-review-btn d-none"
+                data-review-id="{{this.id}}"
+              >
+                Видалити рецензію
+              </button>
 
               <!-- Comments Section -->
               <div class="mt-4">
@@ -49,10 +57,21 @@
                     <p>{{this.content}}</p>
                     <p>
                       <strong>By:</strong>
-                      {{this.user.username}} |
+                      <span
+                        class="comment-author"
+                        data-author="{{this.user.username}}"
+                        >{{this.user.username}}</span
+                      >
+                      |
                       <strong>Date:</strong>
                       {{formatDate this.createdAt}}
                     </p>
+                    <button
+                      class="btn btn-sm btn-danger delete-comment-btn d-none"
+                      data-comment-id="{{this.id}}"
+                    >
+                      Видалити коментар
+                    </button>
                   </li>
                   {{/each}}
                 </ul>

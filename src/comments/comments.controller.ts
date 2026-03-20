@@ -7,14 +7,22 @@ import {
   Patch,
   Delete,
   Req,
+  Headers,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(
+    private readonly commentsService: CommentsService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post()
   create(
@@ -43,7 +51,22 @@ export class CommentsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.commentsService.deleteComment(Number(id));
+  async remove(
+    @Param('id') id: number,
+    @Headers('authorization') authHeader: string,
+  ) {
+    if (!authHeader) {
+      throw new UnauthorizedException('No token provided');
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+      this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+      return await this.commentsService.deleteComment(Number(id));
+    } catch {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

@@ -7,11 +7,6 @@ export class CommentsService {
 
   // Створення нового коментаря
   async createComment(userId: number, reviewId: number, content: string) {
-    console.log('Data received in createComment:', {
-      userId,
-      reviewId,
-      content,
-    });
     if (!userId || !reviewId || !content) {
       throw new Error('Missing required fields: userId, reviewId, or content');
     }

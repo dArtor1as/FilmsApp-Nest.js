@@ -31,19 +31,39 @@ export class RatingsService {
   async createRating(userId, createRatingDto: CreateRatingDto) {
     const { movieId, value } = createRatingDto;
 
-    // Створення нового рейтингу
-    const rating = await this.databaseService.rating.create({
-      data: {
-        value,
-        user: { connect: { id: userId } },
-        movie: { connect: { id: movieId } },
-      },
+    // Шукаємо існуючий рейтинг користувача для цього фільму
+    let rating = await this.databaseService.rating.findFirst({
+      where: { userId, movieId },
     });
+
+    if (rating) {
+      // Якщо рейтинг існує, оновлюємо його
+      rating = await this.databaseService.rating.update({
+        where: { id: rating.id },
+        data: { value },
+      });
+    } else {
+      // Створення нового рейтингу
+      rating = await this.databaseService.rating.create({
+        data: {
+          value,
+          user: { connect: { id: userId } },
+          movie: { connect: { id: movieId } },
+        },
+      });
+    }
 
     // Оновлення середнього рейтингу користувачів для фільму
     await this.updateUserRating(movieId);
 
     return rating;
+  }
+
+  // Отримання рейтингу конкретного користувача для фільму
+  async getUserRatingForMovie(userId: number, movieId: number) {
+    return this.databaseService.rating.findFirst({
+      where: { userId, movieId },
+    });
   }
 
   // Отримання всіх рейтингів

@@ -1,8 +1,8 @@
 // integration.setup.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../src/app.module'; // Ваш головний модуль
-import { DatabaseService } from '../src/database/database.service'; // Сервіс Prisma
+import { AppModule } from '../src/app.module';
+import { DatabaseService } from '../src/database/database.service';
 
 console.log('AppModule path:', require.resolve('../src/app.module'));
 console.log(
@@ -30,7 +30,6 @@ beforeEach(async () => {
   await prisma.$executeRaw`TRUNCATE TABLE "RelatedTable" CASCADE;`;
 });
 // await prisma.movie.deleteMany();
-// Видаліть інші моделі за потреби
 
 afterAll(async () => {
   await prisma.$executeRaw`TRUNCATE TABLE "movie" CASCADE;`; // Видалення всіх даних з каскадним очищенням

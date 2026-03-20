@@ -6,10 +6,15 @@
 .navbar-custom .nav-link,
 .navbar-custom .navbar-brand {
   color: #fff;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 .navbar-custom .nav-link:hover {
-  color: #ffdd57;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
 }
 
 /* Footer Styles */
@@ -49,4 +54,31 @@ footer {
   transition:
     transform 0.3s,
     box-shadow 0.3s;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffdd57;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 0 10px rgba(255, 221, 87, 0.6);
+  cursor: default;
+}
+
+#logout-btn {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+#logout-btn:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.6);
+  transform: translateY(-2px);
 }

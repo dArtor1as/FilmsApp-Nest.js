@@ -3,6 +3,8 @@ import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 // Мокаємо CommentsService
 const mockCommentsService = {
@@ -15,7 +17,6 @@ const mockCommentsService = {
 
 describe('CommentsController', () => {
   let controller: CommentsController;
-  // let commentsService: CommentsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,11 +26,24 @@ describe('CommentsController', () => {
           provide: CommentsService,
           useValue: mockCommentsService,
         },
+        {
+          provide: JwtService,
+          useValue: {
+            verify: jest
+              .fn()
+              .mockReturnValue({ sub: 1, email: 'test@test.com' }),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue('secret'),
+          },
+        },
       ],
     }).compile();
 
     controller = module.get<CommentsController>(CommentsController);
-    // commentsService = module.get<CommentsService>(CommentsService);
   });
 
   afterEach(() => {
@@ -99,9 +113,10 @@ describe('CommentsController', () => {
   describe('remove', () => {
     it('should delete a comment', async () => {
       const expectedResult = { id: 5, content: 'Deleted comment' };
+      const validHeader = 'Bearer valid-token';
       mockCommentsService.deleteComment.mockResolvedValue(expectedResult);
 
-      expect(await controller.remove(5)).toEqual(expectedResult);
+      expect(await controller.remove(5, validHeader)).toEqual(expectedResult);
       expect(mockCommentsService.deleteComment).toHaveBeenCalledWith(5);
     });
   });
