@@ -39,7 +39,7 @@ export class ReviewsController {
 
   @Get(':id')
   async getReview(@Param('id') id: number) {
-    return this.reviewsService.findOne(id);
+    return this.reviewsService.findOne(Number(id));
   }
 
   @Post()
@@ -57,16 +57,14 @@ export class ReviewsController {
     @Body() updateReviewDto: UpdateReviewDto,
     @Headers('authorization') authHeader: string,
   ) {
-    if (!authHeader) {
-      throw new UnauthorizedException('No token provided');
-    }
-
+    if (!authHeader) throw new UnauthorizedException('No token provided');
     const token = authHeader.split(' ')[1];
     try {
       this.jwtService.verify<JwtPayload>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
-      return this.reviewsService.update(id, updateReviewDto);
+
+      return this.reviewsService.update(Number(id), updateReviewDto);
     } catch {
       throw new UnauthorizedException('Invalid token');
     }
@@ -77,16 +75,14 @@ export class ReviewsController {
     @Param('id') id: number,
     @Headers('authorization') authHeader: string,
   ) {
-    if (!authHeader) {
-      throw new UnauthorizedException('No token provided');
-    }
-
+    if (!authHeader) throw new UnauthorizedException('No token provided');
     const token = authHeader.split(' ')[1];
     try {
       this.jwtService.verify<JwtPayload>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
-      return this.reviewsService.remove(id);
+
+      return this.reviewsService.remove(Number(id));
     } catch {
       throw new UnauthorizedException('Invalid token');
     }

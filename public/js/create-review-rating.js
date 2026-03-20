@@ -38,7 +38,6 @@ document
     const movieId = Number(
       document.querySelector('input[name="movieId"]').value,
     );
-    console.log(token);
     try {
       const response = await fetch('/ratings', {
         method: 'POST',
@@ -50,6 +49,7 @@ document
       });
       if (response.ok) {
         alert('Рейтинг успішно збережено');
+        location.reload();
       } else {
         const error = await response.json();
         alert(error.message);
@@ -58,3 +58,30 @@ document
       alert('An error occurred. Please try again.');
     }
   });
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const token = localStorage.getItem('token');
+  const movieIdInput = document.querySelector('input[name="movieId"]');
+
+  if (token && movieIdInput) {
+    const movieId = movieIdInput.value;
+    try {
+      const response = await fetch(`/ratings/movie/${movieId}/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.value) {
+          const starRadio = document.getElementById(`rateStar${data.value}`);
+          if (starRadio) {
+            starRadio.checked = true;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch user rating:', error);
+    }
+  }
+});

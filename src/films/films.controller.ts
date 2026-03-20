@@ -43,7 +43,7 @@ export class FilmsController {
 
   @Post()
   async createFilm(@Body('tmdbId') tmdbId: number) {
-    console.log(`Received TMDB ID: ${tmdbId}`);
+    // console.log(`Received TMDB ID: ${tmdbId}`);
 
     // Явне приведення tmdbId до числа
     const tmdbIdAsNumber = Number(tmdbId);

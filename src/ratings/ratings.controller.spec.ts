@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RatingsController } from './ratings.controller';
 import { RatingsService } from './ratings.service';
 import { DatabaseService } from '../database/database.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 describe('RatingsController', () => {
   let controller: RatingsController;
@@ -15,6 +17,18 @@ describe('RatingsController', () => {
           provide: DatabaseService, // Замоканий DatabaseService
           useValue: {
             query: jest.fn(), // Додайте методи, які викликаються в тестах
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            verify: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
           },
         },
       ],

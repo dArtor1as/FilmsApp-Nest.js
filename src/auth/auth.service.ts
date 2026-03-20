@@ -41,8 +41,12 @@ export class AuthService {
   }
 
   // Логін
-  async login(user: { id: number; email: string }) {
-    const payload = { sub: user.id, email: user.email };
+  async login(user: { id: number; email: string; username: string }) {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      username: user.username,
+    };
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
       expiresIn: `${this.configService.get<number>('JWT_EXPIRES_IN')}s`, // Час дії токена
