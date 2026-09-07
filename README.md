@@ -8,143 +8,146 @@
   A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.
 </p>
 
-<p align="center">
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-  <a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-  <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-</p>
+# My Cinema (React + NestJS)
 
-# FilmsApp (NestJS)
-
-Веб-застосунок для пошуку, перегляду інформації та оцінки фільмів. Проєкт реалізовано з використанням архітектури на базі NestJS, реляційної бази даних PostgreSQL та ORM Prisma.
-
-Як шаблонний рушій для відображення інтерфейсу використовується Handlebars (HBS).
+Веб-застосунок для пошуку, перегляду інформації та оцінки фільмів. Проєкт реалізовано з використанням сучасної розділеної архітектури: клієнтська частина (SPA) побудована на React, а серверна — на базі NestJS, з використанням реляційної бази даних PostgreSQL та ORM Prisma.
 
 ---
 
 ## Функціонал
 
-- **Каталог фільмів:** Перегляд списку, детальна інформація, пошук та фільтрація за жанрами.
-- **Інтеграція з TMDB API:** Автоматичне отримання та збереження метаданих про фільми.
-- **Автентифікація:** Реєстрація та вхід користувачів з використанням JWT (JSON Web Tokens).
+- **Каталог фільмів:** перегляд списку, детальна інформація, пошук та фільтрація за жанрами.
+- **Інтеграція з TMDB API:** автоматичне отримання та збереження метаданих про фільми.
+- **Автентифікація:** реєстрація та вхід користувачів з використанням JWT (JSON Web Tokens).
 - **Взаємодія:**
-  - Створення та редагування рецензій.
-  - Коментування рецензій.
-  - Система оцінювання фільмів.
-  - Список «Обране» для користувачів.
+  - створення та видалення рецензій;
+  - коментування рецензій;
+  - система оцінювання фільмів (із динамічним перерахунком середнього рейтингу);
 
 ---
 
 ## Технологічний стек
 
-- **Framework:** NestJS
-- **Мова програмування:** TypeScript
-- **База даних:** PostgreSQL
-- **ORM:** Prisma
-- **Template Engine:** Handlebars (hbs)
-- **Контейнеризація:** Docker, Docker Compose
-- **Тестування:** Jest, Supertest
+**Frontend:**
+
+- React (Vite)
+- Tailwind CSS v4 & shadcn/ui
+- React Router
+- Axios
+
+**Backend & База даних:**
+
+- NestJS
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+
+**Інфраструктура & Тестування:**
+
+- Docker, Docker Compose
+- Nginx (для роздачі фронтенду)
+- Jest, Supertest
 
 ---
 
-# Налаштування
+# Налаштування та запуск
 
-## Встановлення та запуск (Docker)
+## Запуск через Docker (рекомендовано)
 
-### 1. Налаштування змінних оточення
+Завдяки Docker Compose ви можете підняти весь проєкт (базу даних, бекенд і фронтенд) однією командою.
 
-Створіть файл `.env` у кореневій директорії проєкту:
+### 1. Змінні оточення
+
+Створіть файл `.env` у **кореневій директорії** проєкту (для бекенду та БД):
 
 ```env
+# База даних для контейнерів
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=NestjsDB
+DB_USER=postgres
+DB_PASSWORD=MyPassword05
+
 # API Key від TheMovieDB (TMDB)
-TMDB_API_KEY=4b6edd71a6834daf5c966f231e3b0efb
+TMDB_API_KEY=your_api_key
 
 # Налаштування JWT
-JWT_SECRET=your_super_secret_key1234sdaffasd_5sda2dzc
+JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=3600
 
-# Налаштування підключення до бази даних у Docker
-DATABASE_URL="postgresql://postgres:MyPassword05@postgres:5432/filmsdb?schema=public"
+# URL фронтенду (для налаштування CORS)
+FRONTEND_URL=http://localhost:5173
 ```
 
-### 2. Запуск контейнерів
+Створіть файл `.env` у папці `frontend` (для клієнтської частини):
 
-Виконайте команду для збірки та запуску контейнерів:
-
-```
-docker-compose up --build
+```env
+VITE_API_URL=http://localhost:3000
 ```
 
-Ця команда виконає наступні дії:
+### 2. Збірка та запуск
 
-- Створить Docker-образи.
+Виконайте команду в кореневій папці:
 
-- Запустить контейнер з базою даних PostgreSQL.
-
-- Запустить контейнер із застосунком NestJS.
-
-- Автоматично застосує міграції до бази даних.
-
-- Сервер буде доступний за адресою: http://localhost:3000
-
-### 3. Наповнення бази даних (Seeding)
-
-Для коректної роботи застосунку та наявності тестових даних (користувачі, фільми, рецензії) необхідно виконати скрипт наповнення.
-
-Відкрийте новий термінал та виконайте команду (при запущених контейнерах):
-
-```
-docker exec -it my-cinema-app-app-1 npx prisma db seed
+```bash
+docker-compose up --build -d
 ```
 
-Примітка: перевірте ім'я контейнера командою `docker ps`, якщо воно відрізняється від my-cinema-app-app-1.
+Ця команда:
 
-Дані для входу після наповнення:
+- запустить PostgreSQL;
+- накотить міграції Prisma та автоматично наповнить базу тестовими даними (Seed);
+- запустить бекенд NestJS на порту 3000;
+- збере React-застосунок і запустить Nginx для його роздачі на порту 5173.
 
-#### Email:
+**Доступ до застосунку:**
 
-```
-admin@example.com
-```
+- Фронтенд (інтерфейс користувача): http://localhost:5173
+- Бекенд API: http://localhost:3000/api
 
-#### Пароль:
+### 3. Тестовий користувач
 
-```
-123456
-```
+Після запуску база даних вже матиме тестові дані. Ви можете увійти, використовуючи ці облікові дані:
+
+- Email: `admin@example.com`
+- Пароль: `123456`
 
 ## Локальний запуск (без Docker)
 
-Якщо ви бажаєте запустити проєкт без контейнеризації, використовуючи локально встановлені Node.js та PostgreSQL.
+Для локальної розробки вам знадобиться піднята база даних PostgreSQL.
 
-Встановіть залежності:
+### 1. Запуск бекенду
 
-```
+У кореневій папці:
+
+```bash
+# Встановлення залежностей
 npm install
+
+# У .env змініть DB_HOST на localhost та налаштуйте свій порт
+# Запуск міграцій та сидування
+npx prisma migrate dev
+npx prisma db seed
+
+# Запуск сервера
+npm run start:dev
 ```
 
-Налаштуйте файл `.env` для вашої локальної бази даних :
+### 2. Запуск фронтенду
 
-```
-TMDB_API_KEY=4b6edd71a6834daf5c966f231e3b0efb
-JWT_SECRET=your_super_secret_key1234sdaffasd_5sda2dzc
-JWT_EXPIRES_IN=3600
+Відкрийте новий термінал:
 
-Локальне підключення (localhost, порт 5433)
-DATABASE_URL="postgresql://postgres:MyPassword05@localhost:5433/NestjsDB?sslmode=prefer&connect_timeout=10"
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-#### Запустіть застосунок:
-
-```
-npm run start
-```
+---
 
 ## Тестування
 
-Проєкт містить Unit та E2E тести.
+Проєкт містить Unit та E2E тести для бекенд-частини.
 
 #### запуск unit тестів
 
@@ -164,6 +167,8 @@ npm run test:e2e
 npm run test:cov
 ```
 
-### Ліцензія
+---
+
+## Ліцензія
 
 Nest is MIT licensed.
