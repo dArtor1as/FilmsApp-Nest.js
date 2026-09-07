@@ -1,4 +1,4 @@
-import { Clapperboard } from "lucide-react";
+import { Clapperboard } from 'lucide-react';
 
 export function Footer() {
   return (
