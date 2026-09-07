@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --color-background: #401f03;
+  --color-foreground: #f5e9d0;
+
+  --color-card: #403c03;
+  --color-card-foreground: #f5e9d0;
+
+  --color-primary: #f2d272;
+  --color-primary-foreground: #401f03;
+
+  --color-secondary: #f28749;
+  --color-secondary-foreground: #401f03;
+
+  --color-muted: color-mix(in srgb, #a67841 30%, #401f03 70%);
+  --color-muted-foreground: color-mix(in srgb, #a67841 75%, #f2d272 25%);
+
+  --color-accent: #f2d272;
+  --color-accent-foreground: #401f03;
+
+  --color-destructive: #d1453b;
+  --color-destructive-foreground: #f5e9d0;
+
+  --color-border: color-mix(in srgb, #a67841 45%, #401f03 55%);
+  --color-input: color-mix(in srgb, #a67841 45%, #401f03 55%);
+  --color-ring: #f2d272;
+
+  --radius: 0.5rem;
+}
+@utility container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: 1.5rem;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-primary/30 text-foreground;
+  }
+}
+
+@utility film-perforation {
+  background: radial-gradient(
+      circle,
+      var(--color-background) 3px,
+      transparent 3.6px
+    )
+    repeat-x;
+  background-size: 22px 22px;
+  background-position: center;
+  height: 14px;
+}
