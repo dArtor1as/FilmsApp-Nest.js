@@ -84,7 +84,9 @@ describe('ReviewsController', () => {
   describe('createReview', () => {
     it('should create a review using user ID from request', async () => {
       const createDto = { movieId: 1, content: 'Nice!' };
-      const req = { user: { sub: 5, email: 'test@test.com' } };
+      const req = {
+        user: { sub: 5, email: 'test@test.com', username: 'testuser' },
+      };
       const result = { id: 1, ...createDto, userId: 5 };
 
       mockReviewsService.createReview.mockResolvedValue(result);

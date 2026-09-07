@@ -17,6 +17,10 @@ export class ReviewsService {
         user: { connect: { id: userId } },
         movie: { connect: { id: movieId } },
       },
+      include: {
+        user: true,
+        movie: true,
+      },
     });
   }
 

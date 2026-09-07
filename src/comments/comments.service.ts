@@ -16,6 +16,7 @@ export class CommentsService {
         user: { connect: { id: userId } },
         review: { connect: { id: reviewId } },
       },
+      include: { user: true },
     });
   }
 
