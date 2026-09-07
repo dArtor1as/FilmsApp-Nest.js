@@ -4,7 +4,6 @@ import {
   Post,
   NotFoundException,
   Get,
-  Render,
   Query,
   Param,
 } from '@nestjs/common';
@@ -21,7 +20,6 @@ export class FilmsController {
   ) {}
 
   @Get()
-  @Render('films')
   async findAll(
     @Query('genre') genre?: string,
     @Query('title') title?: string,
@@ -32,7 +30,6 @@ export class FilmsController {
   }
 
   @Get(':id')
-  @Render('film-details')
   async findOne(@Param('id') id: string) {
     const film = await this.filmsService.findOne(parseInt(id, 10));
     if (!film) {

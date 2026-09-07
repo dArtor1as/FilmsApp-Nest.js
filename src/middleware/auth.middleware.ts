@@ -16,7 +16,7 @@ export class AuthMiddleware implements NestMiddleware {
   use(
     req: {
       headers: { authorization?: string };
-      user?: { sub: number; email: string };
+      user?: { sub: number; email: string; username: string };
     },
     res: Response,
     next: () => void,
@@ -28,12 +28,13 @@ export class AuthMiddleware implements NestMiddleware {
 
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = this.jwtService.verify<{ sub: number; email: string }>(
-        token,
-        {
-          secret: this.configService.get<string>('JWT_SECRET'),
-        },
-      );
+      const decoded = this.jwtService.verify<{
+        sub: number;
+        email: string;
+        username: string;
+      }>(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
       req.user = decoded; // Зберігаємо інформацію про користувача
       next();
     } catch {

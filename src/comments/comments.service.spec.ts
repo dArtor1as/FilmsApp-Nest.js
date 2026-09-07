@@ -58,6 +58,7 @@ describe('CommentsService', () => {
           user: { connect: { id: 2 } },
           review: { connect: { id: 3 } },
         },
+        include: { user: true },
       });
     });
 

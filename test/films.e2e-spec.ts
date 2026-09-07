@@ -4,7 +4,6 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DatabaseService } from '../src/database/database.service';
 import { TmdbService } from '../src/tmdb/tmdb.service';
-import { join } from 'path';
 
 describe('FilmsController (e2e)', () => {
   let app: NestExpressApplication;
@@ -56,8 +55,7 @@ describe('FilmsController (e2e)', () => {
 
     app = moduleFixture.createNestApplication<NestExpressApplication>();
 
-    app.setBaseViewsDir(join(__dirname, '..', 'views'));
-    app.setViewEngine('hbs');
+    // Налаштування HBS видалено, оскільки тепер це JSON API
 
     await app.init();
   });
@@ -66,12 +64,21 @@ describe('FilmsController (e2e)', () => {
     await app.close();
   });
 
-  it('/films (GET) should return a list of films', async () => {
+  it('/films (GET) should return a list of films and genres', async () => {
     const response = await request(app.getHttpServer()).get('/films');
+
     expect(response.status).toBe(200);
-    expect(response.text).toContain('<h1 class="my-4">Films</h1>');
-    expect(response.text).toContain('Test Film');
-    expect(response.text).toContain('Another Test Film');
+
+    // Перевіряємо структуру JSON замість HTML
+    expect(response.body).toBeDefined();
+    expect(response.body.films).toHaveLength(2);
+    expect(response.body.films[0].title).toBe('Test Film');
+    expect(response.body.films[1].title).toBe('Another Test Film');
+
+    // Перевіряємо, що жанри також повертаються
+    expect(response.body.genres).toEqual(
+      expect.arrayContaining(['Drama', 'Action', 'Comedy']),
+    );
   });
 
   it('/films (POST) should create a new film', async () => {

@@ -8,7 +8,6 @@ import {
   Patch,
   Delete,
   UnauthorizedException,
-  Render,
   Req,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
@@ -18,8 +17,9 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 interface JwtPayload {
-  sub: number; // або відповідно до структури вашого токена
+  sub: number;
   email: string;
+  username: string;
 }
 
 @Controller('reviews')
@@ -31,7 +31,6 @@ export class ReviewsController {
   ) {}
 
   @Get()
-  @Render('reviews')
   async getAllReviews() {
     const reviews = await this.reviewsService.findAll();
     return { reviews };
