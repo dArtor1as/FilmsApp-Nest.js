@@ -57,6 +57,15 @@ export default function Login() {
               Увійдіть, щоб оцінювати фільми та писати рецензії.
             </p>
           </div>
+          {/* ВІДОБРАЖЕННЯ ПОМИЛКИ */}
+          {error && (
+            <div
+              role="alert"
+              className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
@@ -91,6 +100,10 @@ export default function Login() {
             </div>
             <Button type="submit" className="w-full">
               Авторизуватися
+            </Button>
+            {/* СТАН ЗАВАНТАЖЕННЯ НА КНОПКУ */}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Завантаження...' : 'Авторизуватися'}
             </Button>
           </form>
 

@@ -35,10 +35,6 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/prisma ./prisma
 
-#  Копіюємо папку з HTML-шаблонами та статику
-COPY --from=builder /usr/src/app/views ./views
-COPY --from=builder /usr/src/app/public ./public
-
 #  Копіюємо конфіг прізми
 COPY --from=builder /usr/src/app/prisma.config.ts ./
 

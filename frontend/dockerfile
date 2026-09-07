@@ -1,0 +1,31 @@
+# Етап 1: Збірка (Builder)
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+
+# Копіюємо package.json та встановлюємо залежності
+COPY package*.json ./
+RUN npm install
+
+# Копіюємо весь код фронтенду
+COPY . .
+
+# Приймаємо VITE_API_URL як аргумент під час збірки
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+# Білдимо проєкт
+RUN npm run build
+
+# Етап 2: Роздача (Production server)
+FROM nginx:alpine
+
+# Копіюємо збірку з попереднього етапу
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Налаштовуємо Nginx для роботи з React Router (перенаправлення на index.html)
+RUN echo "server { listen 80; location / { root /usr/share/nginx/html; index index.html; try_files \$uri \$uri/ /index.html; } }" > /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD sh -c "echo -e '\n\n Фронтенд успішно запущено!\n Відвідайте: http://localhost:5173\n\n' && nginx -g 'daemon off;'"
